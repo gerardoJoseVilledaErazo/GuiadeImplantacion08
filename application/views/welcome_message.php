@@ -20,7 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	</div>
 	<div class="row">
 		<div class="col-lg-12 text-center display-1">
-			<a href="http://localhost:8080/guia08/index.php/estudiantes"><button class="btn btn-lg btn-success">IR AL EJERCICIO</button></a>	
+			<a href="http://localhost/guia08/index.php/estudiantes"><button class="btn btn-lg btn-success">IR AL EJERCICIO</button></a>	
 		</div>
 	</div>
 </div>

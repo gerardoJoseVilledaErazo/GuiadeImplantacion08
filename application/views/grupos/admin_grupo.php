@@ -3,6 +3,10 @@
 <hr>
 <div>
     <p><strong>Materia: </strong><?php echo $data_grupo->materia; ?></p>
+    <!--
+    <p><strong>Profesor: </strong><?php echo $data_grupo->nombrecompleto; ?></p>
+    -->
+    
     <p><strong>Profesor: </strong><?php echo $data_grupo->nombre . " " . $data_grupo->apellido; ?></p>
     <p><strong>Grupo: </strong><?php echo $data_grupo->num_grupo; ?></p>
     <p><strong>Año: </strong><?php echo $data_grupo->anio; ?></p>
@@ -23,7 +27,12 @@
         <button class="btnAgregar" onclick="agregarEstudiante()">
                 Agregar
         </button>
-        <a class="btn btn-success" href="<?=site_url('grupos/report_estudiantes_por_grupo')?>">Reporte en PDF (Listado de estudiantes por grupo)</a>
+        <a class="btn btn-success" href="<?=site_url('grupos/report_estudiantes_por_grupo/' . $data_grupo->idgrupo)?>">Reporte en PDF (Listado de estudiantes por grupo)</a>
+        
+        <!--
+            <a class="btn btn-success" href="<?=site_url('grupos/report_estudiantes_por_grupo')?>">Reporte en PDF (Listado de estudiantes por grupo)</a>
+            
+        -->
     </div>
 </div>
 <br>

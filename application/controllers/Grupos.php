@@ -346,7 +346,7 @@ class Grupos extends CI_Controller
     /*                          FUNCION PARA GENERAR REPORTE                         */
     /* ----------------------------------------------------------------------------- */
 
-    public function report_estudiantes_por_grupo(){//
+    public function report_estudiantes_por_grupo($id){//
         //Se carga la libreria para generar tablas
         $this->load->library("table");
         //Se carga la libreria Report que acabamos de crear
@@ -395,16 +395,34 @@ class Grupos extends CI_Controller
 
         $this->table->set_template($template);
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /*
         $this->table->set_heading('Codigo','Estudiante');//
+                $this->load->model('Grupo_model');
+                $grupo_estudiantes = $this->Grupo_model->todos_los_inscritos($id);//
+                foreach ($grupo_estudiantes as $grupo_estudiante):
+                $this->table->add_row($grupo_estudiante->idestudiante, $grupo_estudiante->Alumno);
+                //, $estudiante->nombre . " " . $estudiante->apellido);
+                endforeach;
+        */
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        $this->load->model('Estudiante_model');
-        $estudiantes = $this->Estudiante_model->getAll();//aqui
-
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        foreach ($estudiantes as $estudiante):
-            $this->table->add_row($estudiante->idestudiante, $estudiante->nombre . " " . $estudiante->apellido);
-        endforeach;
+                /*$this->table->set_heading('Id Grupo','Alumno','Num Grupo','Ciclo','Año','Profesor Grupo');//
+                $this->load->model('Grupo_model');
+                $grupo_estudiantes = $this->Grupo_model->todos_los_inscritos($id);//
+                //Iterando
+                foreach ($grupo_estudiantes as $grupo_estudiante):
+                $this->table->add_row($grupo_estudiante->idgrupo, $grupo_estudiante->Alumno, $grupo_estudiante->num_grupo, $grupo_estudiante->ciclo, $grupo_estudiante->anio, $grupo_estudiante->ProfesorGrupo);
+                
+                endforeach;*/
+                
+                $this->table->set_heading('Id Grupo','Alumno','Num Grupo','Ciclo','Año','Profesor Grupo');//
+                $this->load->model('Grupo_model');
+                $grupos = $this->Grupo_model->todos_los_inscritos($id);//
+                //Iterando
+                foreach ($grupos as $grupo):
+                $this->table->add_row($grupo->idgrupo, $grupo->Alumno, $grupo->num_grupo, $grupo->ciclo, $grupo->anio, $grupo->ProfesorGrupo);
+                
+                endforeach;
+                
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         $html = $this->table->generate();
@@ -422,7 +440,7 @@ class Grupos extends CI_Controller
         //cerrar y mostrar el reporte
         $pdf->Output(md5(time()) . '.pdf', 'I');    
     }
-    /*
+    
     public function report_todos_los_grupos(){//
         //Se carga la libreria para generar tablas
         $this->load->library("table");
@@ -478,7 +496,8 @@ class Grupos extends CI_Controller
         $grupos = $this->Grupo_model->getAll();//aqui
 
         foreach ($grupos as $grupo):
-            $this->table->add_row($grupo->idgrupo, $grupo->num_grupo, $grupo->anio, $grupo->ciclo, $grupo->materia, $grupo->nombreCompleto);
+            $this->table->add_row($grupo->idgrupo, $grupo->num_grupo, $grupo->anio, $grupo->ciclo, $grupo->materia, $grupo->nombre. " " . $grupo->apellido);
+            //$this->table->add_row($grupo->idgrupo, $grupo->num_grupo, $grupo->anio, $grupo->ciclo, $grupo->materia, $grupo->nombreCompleto);
         endforeach;
 
         $html = $this->table->generate();
@@ -496,7 +515,7 @@ class Grupos extends CI_Controller
         //cerrar y mostrar el reporte
         $pdf->Output(md5(time()) . '.pdf', 'I');    
     }
-    */
+    
     /* ----------------------------------------------------------------------------- */
     /*                         /FUNCION PARA GENERAR REPORTE                         */
     /* ----------------------------------------------------------------------------- */
