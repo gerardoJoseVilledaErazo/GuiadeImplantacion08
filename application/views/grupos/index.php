@@ -16,9 +16,11 @@
             <a class="btn btn-success d-block" href="<?= site_url('grupos/insertar') ?>">Agregar</a>
         </div>
         <br> 
+        <!-- 
         <div class="col-sm-6">
             <a class="btn btn-info d-block" href="<?=site_url('grupos/report_todos_los_grupos')?>">Reporte en PDF (Todos los grupos)</a>
         </div> 
+        -->
         <br>
     </div>
 
@@ -42,9 +44,10 @@
                         <td><?php echo $item->num_grupo; ?></td>
                         <td><?php echo $item->anio; ?></td>
                         <td><?php echo $item->ciclo; ?></td>
-                        <td><?php echo $item->materia; ?></td>
-                        <td><?php echo $item->nombreCompleto; ?></td>
+                        <td><?php echo $item->materia; ?></td>                        
+                        <td><?php echo $item->nombre ." " . $item->apellido; ?></td>
                         <td>
+                            <a href="<?=site_url('grupos/adminAlumnos/' . $item->idgrupo)?>">Administrar</a>
                             <a href="<?= site_url('grupos/modificar/' . $item->idgrupo) ?>">Modificar</a>
                             <a href="<?= site_url('grupos/eliminar/' . $item->idgrupo) ?>" 
                             onclick="return confirm('¿Está seguro?')">Eliminar</a>

@@ -58,6 +58,43 @@ class Grupos extends CI_Controller
         $this->load->view("grupos/add_edit", $data);
         $this->load->view("shared/footer");
     }
+
+    /*
+     public function modificar($id)
+    {
+        $this->load->model('Grupo_model');
+        $this->load->model('Materia_model');
+        $this->load->model('Profesor_model');
+
+        $grupo = $this->Grupo_model->getById($id);
+        $data = array(
+            "grupo" => $grupo,
+            "materias" => $this->Materia_model->getAll(),
+            "profesores" => $this->Profesor_model->getAll(),
+            "title" => "Modificar grupo",
+        );
+        $this->load->view("shared/header", $data);
+        $this->load->view("grupos/add_edit", $data);
+        $this->load->view("shared/footer");
+    }
+     */
+
+    // Funcion que permite la administracion de los alumnos
+    public function adminAlumnos($id){
+
+        $this->load->model('Grupo_model');
+        $this->load->model('Estudiante_model');
+        $data = array(
+            "data_grupo" => $this->Grupo_model->getGrupoCompletoById($id),
+            "estudiantes" => $this->Estudiante_model->getAll(),
+            "grupo_estudiantes" => $this->Grupo_model->getEstudiantesByIdGrupo($id),
+            "title" => "Administrar grupo"
+        );
+
+        $this->load->view("shared/header", $data);
+        $this->load->view("grupos/admin_grupo", $data);
+        $this->load->view("shared/footer");
+    }
     // FIN - FUNCIONES QUE CARGAN VISTAS /////////////////////////////////////////////////////////
 
     // FUNCIONES QUE REALIZAN OPERACIONES /////////////////////////////////////////////////////////
@@ -72,11 +109,12 @@ class Grupos extends CI_Controller
         valid_email: indica que el valor debe ser un correo con formato válido.
          */
         $this->form_validation->set_error_delimiters('', '');
+        /*
         $this->form_validation->set_rules(
             "idgrupo", 
             "Id Grupo", 
             "required|min_length[10]|max_length[10]|is_unique[grupos.idgrupo]"
-        );
+        );*/
         $this->form_validation->set_rules(
             "num_grupo", 
             "Numero de Grupo", 
@@ -85,7 +123,7 @@ class Grupos extends CI_Controller
         $this->form_validation->set_rules(
             "anio", 
             "Año", 
-            "required|integer"
+            "required|integer|min_length[4]|max_length[4]"
         );
         $this->form_validation->set_rules(
             "ciclo", 
@@ -95,12 +133,12 @@ class Grupos extends CI_Controller
         $this->form_validation->set_rules(
             "idmateria", 
             "Materia", 
-            "required|min_length[10]|max_length[10]"
+            "required"
         );
         $this->form_validation->set_rules(
             "idprofesor", 
             "Profesor", 
-            "required|min_length[10]|max_length[10]"
+            "required"
         );
 
         // Modificando el mensaje de validación para los errores
@@ -116,18 +154,8 @@ class Grupos extends CI_Controller
             'max_length', 
             'El campo %s debe tener como máximo %s caracteres.'
         );
-        $this->form_validation->set_message(
-            'valid_email', 
-            'El campo %s no es un correo válido.'
-        );
-        $this->form_validation->set_message(
-            'is_unique', 
-            'El campo %s ya existe.'
-        );
-        $this->form_validation->set_message(
-            'alpha', 
-            'El campo %s debe contener solo caracteres alfabeticos.'
-        );
+        $this->form_validation->set_message('integer', 'El campo %s debe ser un número entero.');
+        
 
         // Parámetros de respuesta
         header('Content-type: application/json');
@@ -140,7 +168,7 @@ class Grupos extends CI_Controller
             try {
                 $this->load->model('Grupo_model');
                 $data = array(
-                    "idgrupo" => $this->input->post("idgrupo"),
+                    /*"idgrupo" => $this->input->post("idgrupo"),*/
                     "num_grupo" => $this->input->post("num_grupo"),
                     "anio" => $this->input->post("anio"),
                     "ciclo" => $this->input->post("ciclo"),
@@ -181,27 +209,27 @@ class Grupos extends CI_Controller
     {
 
         // Reglas de validación del formulario
-        $this->form_validation->set_error_delimiters('', '');
         /*
         required: indica que el campo es obligatorio.
         min_length: indica que la cadena debe tener al menos una cantidad determinada de caracteres.
         max_length: indica que la cadena debe tener como máximo una cantidad determinada de caracteres.
         valid_email: indica que el valor debe ser un correo con formato válido.
          */
-        $this->form_validation->set_rules(
+        $this->form_validation->set_error_delimiters('', '');
+        /*$this->form_validation->set_rules(
             "idgrupo", 
             "Id Grupo", 
             "required|min_length[10]|max_length[10]"
-        );
+        );*/
         $this->form_validation->set_rules(
             "num_grupo", 
             "Numero de Grupo", 
-            "required|min_length[3]|max_length[3]|alpha_numeric_spaces"
+            "required|min_length[3]|max_length[3]"
         );
         $this->form_validation->set_rules(
             "anio", 
             "Año", 
-            "required|integer"
+            "required|integer|min_length[4]|max_length[4]"
         );
         $this->form_validation->set_rules(
             "ciclo", 
@@ -211,12 +239,12 @@ class Grupos extends CI_Controller
         $this->form_validation->set_rules(
             "idmateria", 
             "Materia", 
-            "required|min_length[10]|max_length[10]"
+            "required"
         );
         $this->form_validation->set_rules(
             "idprofesor", 
             "Profesor", 
-            "required|min_length[10]|max_length[10]"
+            "required"
         );
 
         // Modificando el mensaje de validación para los errores, en este caso para
@@ -227,10 +255,8 @@ class Grupos extends CI_Controller
         'El campo %s debe tener al menos %s caracteres.');
         $this->form_validation->set_message('max_length', 
         'El campo %s debe tener como máximo %s caracteres.');
-        $this->form_validation->set_message('is_unique', 
-        'El campo %s ya existe.');
-        $this->form_validation->set_message('alpha', 
-        'El campo %s debe contener solo caracteres alfabeticos.');
+        $this->form_validation->set_message('integer', 'El campo %s debe ser un número entero.');
+        
 
         // Parámetros de respuesta
         header('Content-type: application/json');
@@ -285,14 +311,118 @@ class Grupos extends CI_Controller
         }
         redirect("grupos");
     }
-    // FIN - FUNCIONES QUE REALIZAN OPERACIONES /////////////////////////////////////////////////////////
-    
+
+    public function postAdminAlumnos(){
+
+        // Parametros de repuesta
+        header('Content-type: application/json');
+        $statusCode = 200;
+        $msg = "";
+
+        try{
+            $this->load->model('Grupo_model');
+            $data = array(
+                "grupo_estudiantes" => $this->input->post("grupo_estudiantes"),
+                "idgrupo" => $this->input->post("idgrupo"),
+            );  
+            $result = $this->Grupo_model->adminGrupo($data);
+            if ($result) {
+                $msg = "Información guardada correctamente";
+            } else {
+                $statusCode = 500;
+                $msg = "No se pudo guardar la información";
+            }
+        }catch(Exception $ex) {
+            $statusCode = 500;
+            $msg = "Ocurrio un error";
+        }
+        $this->data['msg'] = $msg;
+        $this->output->set_status_header($statusCode);
+        echo json_encode($this->data);
+    }
     // FIN - FUNCIONES QUE REALIZAN OPERACIONES /////////////////////////////////////////////////////////
 
     /* ----------------------------------------------------------------------------- */
     /*                          FUNCION PARA GENERAR REPORTE                         */
     /* ----------------------------------------------------------------------------- */
 
+    public function report_estudiantes_por_grupo(){//
+        //Se carga la libreria para generar tablas
+        $this->load->library("table");
+        //Se carga la libreria Report que acabamos de crear
+        $this->load->library("Report");
+        
+        $pdf = new Report(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTFF-8', false);
+        $pdf->titulo = "Listado de Estudiantes por grupo";//
+        //Informacion del documento
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Gerardo Villeda');
+        $pdf->SetTitle('Listado de Estudiantes por grupo');//
+        $pdf->SetSubject('Report generado usando Codeigniter y TCPDF');
+        $pdf->SetKeywords('TCPDF, PDF, MySQL, Codeigniter');
+
+        //Informacion por defecto del encabezado
+
+        //Fuente de encabezado y pie de pagina
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        //Fuente por defecto Monospaced
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        //Margenes
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->setHeaderMargin(15);
+        $pdf->setFooterMargin(PDF_MARGIN_FOOTER);
+
+        //Quiebre de pagina automatico
+        $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+
+        //Factor de escala de imagen
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        //Fuente del contenido
+        $pdf->SetFont('Helvetica','',10);
+
+        // --------------------------------------------------------------------
+
+        //Generar la tabla y su informacion
+        $template = array(
+            'table_open' => '<table border="1" cellpadding="2" cellspacing="1">',
+            'heading_cell_start' => '<th style="font-weight: bold; color:white;
+            background-color: #13CDF7">',
+        );
+
+        $this->table->set_template($template);
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $this->table->set_heading('Codigo','Estudiante');//
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $this->load->model('Estudiante_model');
+        $estudiantes = $this->Estudiante_model->getAll();//aqui
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        foreach ($estudiantes as $estudiante):
+            $this->table->add_row($estudiante->idestudiante, $estudiante->nombre . " " . $estudiante->apellido);
+        endforeach;
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $html = $this->table->generate();
+        //Generar la informacion de la tabla
+
+        //Añadir pagina
+        $pdf->AddPage();
+
+        //Contenido de salida en HTML
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        //Reiniciar puntero a la ultima pagina
+        $pdf->lastPage();
+
+        //cerrar y mostrar el reporte
+        $pdf->Output(md5(time()) . '.pdf', 'I');    
+    }
+    /*
     public function report_todos_los_grupos(){//
         //Se carga la libreria para generar tablas
         $this->load->library("table");
@@ -366,6 +496,7 @@ class Grupos extends CI_Controller
         //cerrar y mostrar el reporte
         $pdf->Output(md5(time()) . '.pdf', 'I');    
     }
+    */
     /* ----------------------------------------------------------------------------- */
     /*                         /FUNCION PARA GENERAR REPORTE                         */
     /* ----------------------------------------------------------------------------- */
